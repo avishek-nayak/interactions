@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Architects+Daughter&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet">
 <style>
 :root{
   /* ── Surface ── */
@@ -291,8 +292,8 @@ body{font-family:'Inter', sans-serif;background:var(--bg);color:var(--text);line
 /* PROGRESS RING */
 .ring-wrap{position:relative;width:52px;height:52px;cursor:pointer}
 .ring-svg{transform:rotate(-90deg)}
-.ring-track{fill:none;stroke:var(--border2);stroke-width:4}
-.ring-fill{fill:none;stroke:var(--yellow);stroke-width:4;stroke-linecap:square;stroke-dasharray:131;stroke-dashoffset:131;transition:stroke-dashoffset .4s ease}
+.ring-track{fill:none;stroke:var(--border2);stroke-width:2.5}
+.ring-fill{fill:none;stroke:var(--text2);stroke-width:2.5;stroke-linecap:square;stroke-dasharray:131;stroke-dashoffset:131;transition:stroke-dashoffset .4s ease}
 .ring-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:500;color:var(--text)}
 
 /* STARS */
@@ -314,7 +315,7 @@ body{font-family:'Inter', sans-serif;background:var(--bg);color:var(--text);line
 .check-circle{width:40px;height:40px;border-radius:0;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;box-shadow:var(--shadow)}
 .check-circle.done{background:var(--yellow)}
 .check-circle svg{width:18px;height:18px}
-.check-path{stroke:var(--border);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s ease .05s}
+.check-path{stroke:var(--text2);stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s ease .05s}
 .check-circle.done .check-path{stroke-dashoffset:0}
 
 /* CHIP ROW */
@@ -682,6 +683,7 @@ body{font-family:'Inter', sans-serif;background:var(--bg);color:var(--text);line
 .cml-root .flip-unit{ width: 180px; height: 150px; position: relative; cursor: pointer; transform-style: preserve-3d; will-change: transform; }
 .cml-root .flip-face{
   position: absolute; inset: 0; backface-visibility: hidden;
+  color: var(--cml-ink);
   background: var(--cml-card); border: 1px solid var(--cml-ink); border-radius: 12px;
   padding: 16px 18px; box-shadow: 0 1px 0 var(--cml-ink);
 }
@@ -788,6 +790,18 @@ body{font-family:'Inter', sans-serif;background:var(--bg);color:var(--text);line
 }
 .cml-root .tr.lead{ background: var(--cml-ink); color: #fff; cursor: grab; z-index: 10; }
 .cml-root .tr.lead:active{ cursor: grabbing; }
+
+/* Followers render as distinct filled shapes */
+.cml-root .tr.shape{
+  width: 50px; height: 50px; margin: -25px 0 0 -25px;
+  border: none; box-shadow: none; border-radius: 0;
+  background: var(--cml-ink);
+}
+.cml-root .tr.shape[data-shape="1"]{ border-radius: 50%; }                                   /* circle */
+.cml-root .tr.shape[data-shape="2"]{ clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); } /* diamond */
+.cml-root .tr.shape[data-shape="3"]{ clip-path: polygon(50% 4%, 96% 96%, 4% 96%); }          /* triangle */
+.cml-root .tr.shape[data-shape="4"]{ clip-path: polygon(50% 0, 98% 38%, 79% 96%, 21% 96%, 2% 38%); } /* pentagon */
+.cml-root .tr.shape[data-shape="5"]{ clip-path: polygon(25% 2%, 75% 2%, 100% 50%, 75% 98%, 25% 98%, 0 50%); } /* hexagon */
 
 /* ============ 12 FILTER GRID ============ */
 .cml-root .filters{ display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -1191,6 +1205,9 @@ body {
   max-width: none !important;
   margin: 0 !important;
   padding: 28px 36px 60px !important;
+  /* Clip the absolutely-positioned inactive sections so they no longer
+     extend the scroll area on every page (fixes the empty infinite scroll). */
+  overflow: hidden !important;
 }
 
 /* Visible heading for the active section (replaces section-head) */
@@ -1536,19 +1553,9 @@ body {
 /* Default body bg (before first section activates) */
 body { transition: background-color .35s ease; }
 
-body[data-section="animations"]  { background: #FFF0B3; }
-body[data-section="text"]        { background: #D4F0FF; }
-body[data-section="interactions"]{ background: #FFE0F0; }
-body[data-section="particle"]    { background: #D6FFE8; }
-body[data-section="magnetic"]    { background: #FFE8D0; }
-body[data-section="cursor"]      { background: #E8DAFF; }
-body[data-section="physics"]     { background: #FFFACC; }
-body[data-section="audio"]       { background: #FFD6D6; }
-body[data-section="scroll"]      { background: #D0F4FF; }
-body[data-section="time"]        { background: #FFE0CC; }
-body[data-section="ai"]          { background: #F0E6FF; }
-body[data-section="colorfield"]  { background: #D6F5FF; }
-body[data-section="cardlab"]     { background: #FFF3CC; }
+/* Page stays on the neutral neo-brutalism surface in every section.
+   (Per-section pastel tints removed to avoid the full-page color wash.) */
+body[data-section]               { background: var(--bg); }
 
 /* ── All containers become transparent ── */
 .section,
@@ -1572,11 +1579,10 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
 .app-bar { background: rgba(250,250,248,0.85) !important; backdrop-filter: blur(12px); }
 .tab-dropdown { background: var(--bg) !important; }
 
-/* Cards and demo areas fully transparent */
+/* Cards keep a solid surface so they read cleanly on the neutral page */
 .card {
-  background: rgba(255,255,255,0.75) !important;
+  background: var(--bg) !important;
   border-radius: 16px !important;
-  backdrop-filter: blur(8px);
 }
 
 /* Demo areas: transparent */
@@ -1757,13 +1763,21 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
     <div class="section-body">
       <div class="section-inner">
         <div class="sec-lbl">Hover over each card</div>
+        <div class="hover-hint">
+          <span class="hover-hint-text">hover me!</span>
+          <svg class="hover-hint-arrow" width="80" height="52" viewBox="0 0 80 52" fill="none" aria-hidden="true">
+            <path d="M8 6 C 26 4, 40 10, 44 26 C 47 38, 40 44, 30 44 C 22 44, 20 36, 27 34 C 40 30, 58 34, 70 46"
+                  stroke="var(--text2)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M70 46 L 60 44 M70 46 L 66 36" stroke="var(--text2)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
     <div class="g3">
-      <div class="card anim-lift"><div class="pill p-pu">Lift</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">credit_card</span></div><div class="ctitle">Lift on hover</div><div class="cdesc">Card rises with depth shadow on hover.</div></div>
-      <div class="card anim-scale"><div class="pill p-bl">Scale</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">image</span></div><div class="ctitle">Scale up</div><div class="cdesc">Subtle zoom communicates interactivity.</div></div>
-      <div class="card anim-border"><div class="pill p-tl">Glow</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">auto_awesome</span></div><div class="ctitle">Border glow</div><div class="cdesc">Pulsing outline ring on featured cards.</div></div>
-      <div class="card anim-float"><div class="pill p-am">Float</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">rocket_launch</span></div><div class="ctitle">Floating bob</div><div class="cdesc">Gentle vertical loop for empty states.</div></div>
-      <div class="card anim-tilt"><div class="pill p-co">Tilt</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">view_in_ar</span></div><div class="ctitle">Tilt wobble</div><div class="cdesc">Playful rotation for gamified UI.</div></div>
-      <div class="card anim-pulse"><div class="pill p-tl">Pulse</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">monitor_heart</span></div><div class="ctitle">Pulse ring</div><div class="cdesc">Expanding ring for live status signals.</div></div>
+      <div class="card anim-lift"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('lift')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-pu">Lift</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">credit_card</span></div><div class="ctitle">Lift on hover</div><div class="cdesc">Card rises with depth shadow on hover.</div></div>
+      <div class="card anim-scale"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('scale')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-bl">Scale</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">image</span></div><div class="ctitle">Scale up</div><div class="cdesc">Subtle zoom communicates interactivity.</div></div>
+      <div class="card anim-border"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('border')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-tl">Glow</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">auto_awesome</span></div><div class="ctitle">Border glow</div><div class="cdesc">Pulsing outline ring on featured cards.</div></div>
+      <div class="card anim-float"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('float')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-am">Float</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">rocket_launch</span></div><div class="ctitle">Floating bob</div><div class="cdesc">Gentle vertical loop for empty states.</div></div>
+      <div class="card anim-tilt"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('tilt')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-co">Tilt</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">view_in_ar</span></div><div class="ctitle">Tilt wobble</div><div class="cdesc">Playful rotation for gamified UI.</div></div>
+      <div class="card anim-pulse"><button class="card-code-btn" onclick="event.stopPropagation();openAnimCode('pulse')" title="Show code"><span class="material-symbols-rounded">code</span></button><div class="pill p-tl">Pulse</div><div class="demo"><span class="material-symbols-rounded" style="font-size:24px;color:var(--text3)">monitor_heart</span></div><div class="ctitle">Pulse ring</div><div class="cdesc">Expanding ring for live status signals.</div></div>
     </div>
 
     <div class="sec-lbl" style="margin-top:1.5rem">Card-specific interactions</div>
@@ -2019,21 +2033,6 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
         </div>
       </div>
 
-      <!-- 6. WATER RIPPLE -->
-      <div class="cursor-card">
-        <div class="zone tall" id="z-water">
-          <button class="zone-code-btn" onclick="event.stopPropagation();openCursorCode('water')"><span class="material-symbols-rounded">code</span></button>
-          <div class="zpill p-bl">Water ripple</div>
-          <canvas id="c-water"></canvas>
-        </div>
-        <div class="cursor-ctrl">
-          <label class="cc-lbl">Smoothness</label>
-          <input class="cc-range" id="water-damp" type="range" min="0.88" max="0.99" step="0.01" value="0.98">
-          <span class="cc-val" id="water-damp-v">High</span>
-          <button class="cc-btn" id="water-replay"><span class="material-symbols-rounded" style="font-size:14px">refresh</span> Replay</button>
-        </div>
-      </div>
-
       <!-- 7. LIGHTNING (Arc discharge) -->
       <div class="cursor-card">
         <div class="zone tall" id="z-lightning">
@@ -2079,24 +2078,6 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
           <!-- constellation name labels rendered here -->
           <div id="const-labels" style="position:absolute;inset:0;pointer-events:none"></div>
         </div>
-        <div class="cursor-ctrl" style="flex-wrap:wrap;gap:8px 16px">
-          <label class="cc-lbl">Preset constellations</label>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="cc-btn cc-const-btn active" data-const="orion">Orion</button>
-            <button class="cc-btn cc-const-btn active" data-const="bigdipper">Big Dipper</button>
-            <button class="cc-btn cc-const-btn active" data-const="cassiopeia">Cassiopeia</button>
-            <button class="cc-btn cc-const-btn active" data-const="leo">Leo</button>
-            <button class="cc-btn cc-const-btn active" data-const="scorpius">Scorpius</button>
-            <button class="cc-btn cc-const-btn active" data-const="lyra">Lyra</button>
-            <button class="cc-btn cc-const-btn active" data-const="cygnus">Cygnus</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;width:100%">
-            <label class="cc-lbl">Add your own</label>
-            <input class="cc-input" id="const-name-input" type="text" maxlength="16" placeholder="Name your constellation" style="flex:1">
-            <button class="cc-btn" id="const-add-btn"><span class="material-symbols-rounded" style="font-size:14px">add</span> Add</button>
-            <button class="cc-btn" id="const-clear-btn"><span class="material-symbols-rounded" style="font-size:14px">ink_eraser</span> Clear custom</button>
-          </div>
-        </div>
       </div>
 
     </div><!-- .cursor-grid -->
@@ -2114,7 +2095,7 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
       <div class="section-inner">
         <div class="g4">
       <div class="card"><div class="pill p-pu">Pendulum</div><div class="zone" id="z-pend" style="height:130px;cursor:pointer"></div><div class="ct">Pendulum</div><div class="cd">Click to push. Force accumulates. Friction decays the swing over time.</div></div>
-      <div class="card"><div class="pill p-bl">Rope</div><div class="zone" id="z-rope" style="height:130px"></div><div class="ct">Rope chain</div><div class="cd">A segmented rope with tension. Move the cursor in to push and sway it.</div></div>
+      <div class="card"><div class="pill p-bl">Rope</div><div class="zone" id="z-rope" style="height:130px"></div><div class="ct">Rope chain</div><div class="cd">Several verlet ropes with a gentle breeze. Hover to push and sway them smoothly.</div></div>
       <div class="card"><div class="pill p-tl">Gel</div><div class="zone" id="z-gel" style="height:130px"></div><div class="ct">Gel blob</div><div class="cd">Soft organic shape deforms toward the cursor with spring physics.</div></div>
       <div class="card"><div class="pill p-am">Friction</div><div class="zone" id="z-friction" style="height:130px;cursor:grab"></div><div class="ct">Friction drag</div><div class="cd">Drag the block. Slides with momentum and decelerates realistically.</div></div>
     </div>
@@ -2682,6 +2663,21 @@ body[data-section="cardlab"]     { background: #FFF3CC; }
   </section>
 
 </div><!-- end .page -->
+
+<footer class="site-footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <span class="material-symbols-rounded ft-logo">hexagon</span>
+      <span class="ft-name">Micro Interactions</span>
+    </div>
+    <nav class="ft-links">
+      <a href="#" onclick="return false">Components</a>
+      <a href="#" onclick="return false">Documentation</a>
+      <a href="#" onclick="return false">GitHub</a>
+    </nav>
+    <div class="ft-copy">&copy; 2026 Micro Interactions. Built for the web.</div>
+  </div>
+</footer>
 </main><!-- end .content -->
 
 <!-- ════════════════════════════════════════════════════════════════
@@ -4553,6 +4549,11 @@ watch(shape, buildGrid);
       const map = maps[currentFramework] || {};
       return map[CARDLAB_SPECIMENS[0].id] || '';
     }
+    /* Card Animations section: per-card real CSS */
+    if (currentSection === 'animations' && window._activeAnimDemo) {
+      const as = (window.ANIM_SNIPPETS || {})[window._activeAnimDemo] || {};
+      return as[currentFramework] || as.js || '';
+    }
     /* Cursor section: pick the snippet for the currently-selected demo */
     if (currentSection === 'cursor') {
       const demo = window._activeCursorDemo || 'ribbon';
@@ -4585,6 +4586,8 @@ watch(shape, buildGrid);
     if (currentSection === 'cardlab' && window._activeLabSpecId) {
       const spec = CARDLAB_SPECIMENS.find(s => s.id === window._activeLabSpecId);
       if (spec) cpSection.textContent = spec.num + ' · ' + spec.label;
+    } else if (currentSection === 'animations' && window._activeAnimDemo) {
+      cpSection.textContent = (window.ANIM_LABELS || {})[window._activeAnimDemo] || 'Card Animations';
     } else if (currentSection === 'cursor' && window._activeCursorDemo) {
       const label = (window.CURSOR_LABELS || {})[window._activeCursorDemo] || 'Cursor';
       cpSection.textContent = label;
@@ -4704,6 +4707,14 @@ watch(shape, buildGrid);
   window.openCursorCode = function(demo) {
     window._activeCursorDemo = demo;
     if (currentSection !== 'cursor') activateSection('cursor');
+    refreshCodePanel();
+    openCodePanel();
+  };
+
+  /* ── Card Animations section: per-card code ── */
+  window.openAnimCode = function(demo) {
+    window._activeAnimDemo = demo;
+    if (currentSection !== 'animations') activateSection('animations');
     refreshCodePanel();
     openCodePanel();
   };
@@ -4919,7 +4930,92 @@ document.head.appendChild(styleEl);
 // ─── VOL 2: PHYSICS ─────────────────────────────────────────────
 (()=>{const{c,z,ctx}=makeCanvas('z-pend');if(!c)return;let angle=0.28,vel=0;z.addEventListener('click',()=>vel+=0.22*(angle>0?-1:1));function draw(){ctx.clearRect(0,0,c.width,c.height);vel+=(-Math.sin(angle))*0.018;vel*=0.987;angle+=vel;const ox=c.width/2,oy=8,len=c.height*0.72;const bx=ox+Math.sin(angle)*len,by=oy+Math.cos(angle)*len;ctx.strokeStyle=fg(.3);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(bx,by);ctx.stroke();ctx.fillStyle=fg(.85);ctx.beginPath();ctx.arc(bx,by,12,0,Math.PI*2);ctx.fill();ctx.fillStyle=fg(.4);ctx.beginPath();ctx.arc(ox,oy,3,0,Math.PI*2);ctx.fill();requestAnimationFrame(draw);}draw();})();
 
-(()=>{const{c,z,ctx}=makeCanvas('z-rope');if(!c)return;const N=18;const segs=Array.from({length:N},(_,i)=>({x:c.width/2,y:6+i*(c.height-12)/(N-1),vx:0,vy:0,pinned:i===0}));let mx=-1,my=-1;addMouse(z,(x,y)=>{mx=x;my=y;},()=>{mx=-1;my=-1;});function draw(){ctx.clearRect(0,0,c.width,c.height);for(let it=0;it<4;it++){segs.forEach((s,i)=>{if(s.pinned)return;let ax=0,ay=0.22;if(mx>=0){const dx=s.x-mx,dy=s.y-my,d=Math.hypot(dx,dy)||1;if(d<65){ax+=dx/d*(65-d)/65*2;ay+=dy/d*(65-d)/65*2;}}if(i>0){const p=segs[i-1],dx=p.x-s.x,dy=p.y-s.y,d=Math.hypot(dx,dy)||1,rest=(c.height-12)/(N-1);ax+=(dx/d*(d-rest))*.22;ay+=(dy/d*(d-rest))*.22;}s.vx=(s.vx+ax)*.84;s.vy=(s.vy+ay)*.84;s.x+=s.vx;s.y+=s.vy;});}ctx.beginPath();segs.forEach((s,i)=>i===0?ctx.moveTo(s.x,s.y):ctx.lineTo(s.x,s.y));ctx.strokeStyle=fg(.7);ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();[segs[0],segs[N-1]].forEach(s=>{ctx.fillStyle=fg(.45);ctx.beginPath();ctx.arc(s.x,s.y,3,0,Math.PI*2);ctx.fill();});requestAnimationFrame(draw);}draw();})();
+(()=>{
+  const {c,z,ctx}=makeCanvas('z-rope'); if(!c) return;
+  let W=c.width, H=c.height;
+  const GRAV=0.32, DAMP=0.985, ITER=10, M=14;   // more constraint passes = smoother
+  let mx=-1,my=-1, hovered=false, hoverAmt=0;    // hoverAmt eases 0..1 for smooth transitions
+  addMouse(z,(x,y)=>{mx=x;my=y;hovered=true;},()=>{mx=-1;my=-1;hovered=false;});
+
+  let ropes=[];
+  function build(){
+    W=c.width; H=c.height;
+    if(W<=0||H<=0) return;
+    const ROPES = Math.max(3, Math.min(7, Math.round(W/54)));
+    const restLen = (H-14)/(M-1);
+    ropes=[];
+    for(let r=0;r<ROPES;r++){
+      const px = (r+0.5)/ROPES * W;
+      const pts=[];
+      for(let i=0;i<M;i++){
+        pts.push({x:px, y:6+i*restLen, ox:px, oy:6+i*restLen, pinned:i===0});
+      }
+      ropes.push({pts, px, restLen, phase:r*0.9});
+    }
+  }
+  build();
+
+  let t=0;
+  function frame(){
+    if(c.width!==W||c.height!==H) build();
+    if(!ropes.length){ requestAnimationFrame(frame); return; }
+    t+=0.016;
+    hoverAmt += ((hovered?1:0)-hoverAmt)*0.08;   // ease hover in/out for smoothness
+    ctx.clearRect(0,0,W,H);
+
+    // gentle ambient breeze, stronger while hovered
+    const breeze = Math.sin(t*1.1)*0.06 + Math.sin(t*0.43)*0.035;
+    const windAmp = 0.09 + hoverAmt*0.16;
+    const pushR = 74, pushF = 1.4 + hoverAmt*2.2;
+
+    ropes.forEach(rope=>{
+      const wind = (breeze + Math.sin(t*1.8 + rope.phase)*0.04) * windAmp;
+      // verlet integration
+      rope.pts.forEach(p=>{
+        if(p.pinned){ p.x=rope.px; p.y=6; p.ox=p.x; p.oy=p.y; return; }
+        const vx=(p.x-p.ox)*DAMP, vy=(p.y-p.oy)*DAMP;
+        p.ox=p.x; p.oy=p.y;
+        p.x+=vx+wind;
+        p.y+=vy+GRAV;
+        if(mx>=0){
+          const dx=p.x-mx, dy=p.y-my, d=Math.hypot(dx,dy)||1;
+          if(d<pushR){ const f=(pushR-d)/pushR*pushF; p.x+=dx/d*f; p.y+=dy/d*f; }
+        }
+      });
+      // satisfy distance constraints (multiple passes)
+      for(let it=0; it<ITER; it++){
+        for(let i=0;i<rope.pts.length-1;i++){
+          const a=rope.pts[i], b=rope.pts[i+1];
+          const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1;
+          const adj=(d-rope.restLen)/d;
+          const m1=a.pinned?0:1, m2=b.pinned?0:1, tot=m1+m2||1;
+          a.x+=dx*adj*(m1/tot); a.y+=dy*adj*(m1/tot);
+          b.x-=dx*adj*(m2/tot); b.y-=dy*adj*(m2/tot);
+        }
+      }
+      // draw as a smooth curve through the points
+      const pts=rope.pts;
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for(let i=1;i<pts.length-1;i++){
+        const cxp=pts[i].x, cyp=pts[i].y;
+        const nxp=(pts[i].x+pts[i+1].x)/2, nyp=(pts[i].y+pts[i+1].y)/2;
+        ctx.quadraticCurveTo(cxp,cyp,nxp,nyp);
+      }
+      ctx.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
+      ctx.strokeStyle=fg(0.55+hoverAmt*0.25);
+      ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineJoin='round';
+      ctx.stroke();
+      // pin + end bead
+      ctx.fillStyle=fg(0.4);
+      ctx.beginPath(); ctx.arc(pts[0].x,pts[0].y,2.4,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=fg(0.5+hoverAmt*0.3);
+      ctx.beginPath(); ctx.arc(pts[pts.length-1].x,pts[pts.length-1].y,3.2,0,Math.PI*2); ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
 
 (()=>{const{c,z,ctx}=makeCanvas('z-gel');if(!c)return;let mx=-1,my=-1;const cx2=c.width/2,cy2=c.height/2,R=34;const pts=Array.from({length:14},(_,i)=>{const a=i/14*Math.PI*2;return{bx:cx2+Math.cos(a)*R,by:cy2+Math.sin(a)*R,x:cx2+Math.cos(a)*R,y:cy2+Math.sin(a)*R,vx:0,vy:0};});addMouse(z,(x,y)=>{mx=x;my=y;},()=>{mx=-1;my=-1;});function draw(){ctx.clearRect(0,0,c.width,c.height);pts.forEach(p=>{let ax=(p.bx-p.x)*.08,ay=(p.by-p.y)*.08;if(mx>=0){const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy)||1;if(d<65){ax+=dx/d*(65-d)/65*2.8;ay+=dy/d*(65-d)/65*2.8;}}p.vx=(p.vx+ax)*.72;p.vy=(p.vy+ay)*.72;p.x+=p.vx;p.y+=p.vy;});ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];ctx.quadraticCurveTo(a.x,a.y,(a.x+b.x)/2,(a.y+b.y)/2);}ctx.closePath();ctx.fillStyle=fg(.08);ctx.fill();ctx.strokeStyle=fg(.7);ctx.lineWidth=1.5;ctx.stroke();requestAnimationFrame(draw);}draw();})();
 
@@ -5284,42 +5380,26 @@ const _val = (id, txt) => { const el = document.getElementById(id); if (el) el.t
   let mx = -1, my = -1;
   const labelContainer = document.getElementById('const-labels');
 
-  // 7 built-in constellations (positions normalised 0-1 relative to canvas)
+  // One original constellation (positions normalised 0-1 relative to canvas)
+  // "Nova" — a radiant burst: a central star, a six-point ring, and a short tail.
   const PRESETS = {
-    orion: {
-      name: 'Orion',
-      stars: [[.30,.22],[.36,.28],[.42,.24],[.28,.38],[.44,.36],[.30,.50],[.44,.50],[.34,.42]],
-      lines: [[0,1],[1,2],[3,4],[3,5],[4,6],[5,7],[6,7],[1,7]],
-    },
-    bigdipper: {
-      name: 'Big Dipper',
-      stars: [[.10,.30],[.18,.24],[.28,.22],[.38,.25],[.42,.35],[.34,.42],[.25,.42]],
-      lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]],
-    },
-    cassiopeia: {
-      name: 'Cassiopeia',
-      stars: [[.10,.40],[.20,.25],[.34,.35],[.46,.22],[.58,.32]],
-      lines: [[0,1],[1,2],[2,3],[3,4]],
-    },
-    leo: {
-      name: 'Leo',
-      stars: [[.22,.28],[.30,.22],[.38,.26],[.44,.36],[.38,.44],[.28,.48],[.44,.54]],
-      lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[4,6],[0,5]],
-    },
-    scorpius: {
-      name: 'Scorpius',
-      stars: [[.28,.18],[.32,.28],[.30,.38],[.26,.48],[.24,.58],[.28,.64],[.34,.68],[.40,.64],[.44,.58]],
-      lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]],
-    },
-    lyra: {
-      name: 'Lyra',
-      stars: [[.30,.20],[.24,.32],[.28,.42],[.36,.42],[.40,.32]],
-      lines: [[0,1],[0,4],[1,2],[2,3],[3,4],[1,4],[2,4]],
-    },
-    cygnus: {
-      name: 'Cygnus',
-      stars: [[.30,.14],[.30,.26],[.30,.38],[.30,.52],[.18,.32],[.42,.32]],
-      lines: [[0,1],[1,2],[2,3],[4,5],[4,2],[5,2]],
+    nova: {
+      name: 'Nova',
+      stars: [
+        [.50,.46],  // 0 center
+        [.50,.20],  // 1 top
+        [.63,.33],  // 2 upper-right
+        [.63,.59],  // 3 lower-right
+        [.50,.72],  // 4 bottom
+        [.37,.59],  // 5 lower-left
+        [.37,.33],  // 6 upper-left
+        [.50,.87],  // 7 tail tip
+      ],
+      lines: [
+        [1,2],[2,3],[3,4],[4,5],[5,6],[6,1],   // ring
+        [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],   // spokes
+        [4,7],                                  // tail
+      ],
     },
   };
 
@@ -6480,8 +6560,9 @@ document.querySelectorAll('.spec-curve').forEach(el => {
   const nodes = [];
   for (let i = 0; i < N; i++) {
     const el = document.createElement('div');
-    el.className = 'tr' + (i === 0 ? ' lead' : '');
-    el.textContent = i === 0 ? 'LEAD' : '0' + i;
+    el.className = 'tr' + (i === 0 ? ' lead' : ' shape');
+    if (i === 0) { el.textContent = 'LEAD'; }
+    else { el.dataset.shape = i; }   // 1..5 -> circle / diamond / triangle / pentagon / hexagon
     el.tabIndex = i === 0 ? 0 : -1;
     if (i === 0) el.setAttribute('aria-label', 'Lead card, drag to move; followers chase');
     stage.appendChild(el);
@@ -7759,6 +7840,158 @@ document.querySelectorAll('.spec').forEach(spec => {
 });
 
 })();
+</script>
+
+<!-- ══════════ SKETCH / HAND-DRAWN THEME OVERRIDE ══════════ -->
+<style id="sketch-theme">
+  /* ---- Plain paper + graphite ink palette (monochrome sketch) ---- */
+  :root{
+    --yellow:#EDEBE4; --yellow-hover:#E2DFD6; --yellow-text:#1A1917;
+    --blue-bg:#EDEBE4; --teal-bg:#EDEBE4; --purple-bg:#EDEBE4;
+    --amber-bg:#EDEBE4; --coral-bg:#EDEBE4; --green-bg:#EDEBE4;
+    --border:#C9C6BE;
+    --shadow:0 1px 3px rgba(26,25,23,.07);
+    --shadow-md:0 4px 12px rgba(26,25,23,.10);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --yellow:#35332E; --yellow-hover:#403D37; --yellow-text:#FAFAF8;
+      --border:#46433E;
+      --shadow:0 1px 3px rgba(0,0,0,.4);
+      --shadow-md:0 4px 12px rgba(0,0,0,.5);
+    }
+  }
+  .cml-root{
+    --cml-blue:#1A1917; --cml-orange:#1A1917; --cml-blue-soft:rgba(26,25,23,.08);
+  }
+  @media (prefers-color-scheme:dark){
+    .cml-root{ --cml-blue:#FAFAF8; --cml-orange:#FAFAF8; --cml-blue-soft:rgba(245,244,240,.1); }
+  }
+
+  /* ---- Handwritten type everywhere (code stays mono) ---- */
+  body{ font-family:'Kalam', cursive; font-size:15px; }
+  .nav-logo, .hero h1, .section-head h2, .sec-lbl, .ctitle, .ct,
+  h1,h2,h3,.pill,.chip,.xbtn,.mb,.copy-chip{ font-family:'Architects Daughter', 'Kalam', cursive; }
+  pre, code, .cf-val, .cf-db-value, [class*="mono"]{ font-family:'JetBrains Mono', monospace !important; }
+  /* Animation names and descriptions use Bricolage Grotesque */
+  .ctitle, .ct, .cdesc, .cd{ font-family:'Bricolage Grotesque', sans-serif !important; }
+
+  /* ---- Every label/tag becomes a plain hand-drawn outline ---- */
+  .pill, .p-bl,.p-pu,.p-tl,.p-am,.p-co,.p-pk,.p-gr,.p-gy{
+    background:var(--bg) !important; color:var(--text) !important;
+    border:1px solid var(--border) !important;
+  }
+
+  /* ---- Thin, light pencil strokes (no heavy borders) ---- */
+  .section, .card, .zone, .zone-v2, .xbtn, .cf-toolbar, .cf-seg, .cf-stage,
+  .cf-db, .acc-row, .tog-outer, .copy-chip, .prog-btn, .check-circle, .chip,
+  .mb, .mini-inp, .snack, .tab-dropdown, #field-canvas, #mf-canvas{
+    border-width:1px !important;
+  }
+  /* No hard offset shadows anywhere; use the soft tokens only */
+  .zone, .zone-v2{ box-shadow:none !important; }
+
+  /* ---- Hand-drawn wobbly outlines on layout boxes only ---- */
+  .card, .section, .xbtn, .mb, .chip, .copy-chip, .mini-inp,
+  .acc-row, .prog-btn, .cf-toolbar, .cf-seg, .snack, .tab-dropdown, .pill{
+    border-radius:14px 10px 16px 8px / 8px 16px 10px 14px !important;
+  }
+  .card:nth-of-type(even){ border-radius:10px 16px 8px 14px / 14px 8px 16px 10px !important; }
+  .card:nth-of-type(3n){ border-radius:16px 8px 14px 10px / 10px 14px 8px 16px !important; }
+
+  /* Solid paper cards, thin sketch shadow, no blur */
+  .card{ background:var(--bg) !important; backdrop-filter:none !important; box-shadow:var(--shadow) !important; }
+  .card:hover{ box-shadow:var(--shadow-md) !important; }
+
+  /* Softer graphite section-head hover instead of the flat highlight */
+  .section-head:hover{ background:var(--yellow) !important; }
+
+  /* ---- Hover-me arrow annotation ---- */
+  .hover-hint{ display:flex; align-items:flex-end; gap:6px; margin:2px 0 6px 4px; }
+  .hover-hint-text{
+    font-family:'Architects Daughter','Kalam',cursive; font-size:16px;
+    color:var(--text); transform:rotate(-4deg);
+  }
+  .hover-hint-arrow{ transform:translateY(4px); animation:hint-nudge 1.6s ease-in-out infinite; }
+  @keyframes hint-nudge{ 0%,100%{transform:translateY(4px)} 50%{transform:translate(4px,8px)} }
+  @media (prefers-reduced-motion:reduce){ .hover-hint-arrow{ animation:none; } }
+
+  /* ---- Per-card "Show code" button (matches zone-code-btn) ---- */
+  .card-code-btn{
+    position:absolute; top:8px; right:8px; width:26px; height:26px;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--border); border-radius:7px;
+    background:var(--bg); color:var(--text); cursor:pointer; z-index:20;
+    padding:0; opacity:0; transition:opacity .15s, background .12s, color .12s;
+  }
+  .card:hover .card-code-btn{ opacity:1; }
+  .card-code-btn:focus-visible{ opacity:1; outline:1px solid var(--text2); }
+  .card-code-btn:hover{ background:var(--yellow); color:var(--yellow-text); }
+  .card-code-btn .material-symbols-rounded{ font-size:15px; }
+
+  /* ---- Shared footer (same on every section) ---- */
+  #content{ display:flex; flex-direction:column; }
+  #content > .content-header{ flex:0 0 auto; }
+  #content > .page{ flex:0 0 auto; }
+  .site-footer{ flex:0 0 auto; margin-top:auto; border-top:1px solid var(--border); padding:22px 36px 30px; }
+
+  /* ---- Dropdown caret on the section title (signals it's clickable) ---- */
+  .content-title::after{
+    content:'\e5cf'; /* Material Symbols: expand_more */
+    font-family:'Material Symbols Rounded';
+    font-weight:normal; font-size:.62em;
+    margin-left:.28em; color:var(--text3);
+    display:inline-block; vertical-align:middle; line-height:1;
+    transition:transform .2s ease, color .15s;
+  }
+  .content-title:hover::after{ color:var(--text); }
+  .tab-nav.open .content-title::after{ transform:rotate(180deg); color:var(--text); }
+  .ft-inner{ max-width:1100px; margin:0 auto; display:flex; align-items:center; flex-wrap:wrap; gap:12px 22px; }
+  .ft-brand{ display:flex; align-items:center; gap:8px; }
+  .ft-logo{ font-size:18px; color:var(--text2); }
+  .ft-name{ font-family:'Architects Daughter','Kalam',cursive; font-size:15px; color:var(--text); }
+  .ft-links{ display:flex; gap:18px; margin-left:6px; }
+  .ft-links a{ font-size:12.5px; color:var(--text3); text-decoration:none; transition:color .12s; }
+  .ft-links a:hover{ color:var(--text); }
+  .ft-copy{ margin-left:auto; font-size:11.5px; color:var(--text3); }
+  @media(max-width:640px){ .ft-inner{ flex-direction:column; align-items:flex-start } .ft-copy{ margin-left:0 } }
+</style>
+
+<!-- Real CSS snippets for the Card Animations cards (used by the code panel) -->
+<script>
+window.ANIM_SNIPPETS = {
+  "lift": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-lift\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes lift-shadow{\n  0%,100%{ transform:translateY(0); box-shadow:none }\n  50%    { transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12) }\n}\n.anim-lift:hover .demo{ animation:lift-shadow 1s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-lift\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes lift-shadow{\n  0%,100%{ transform:translateY(0); box-shadow:none }\n  50%    { transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12) }\n}\n.anim-lift:hover .demo{ animation:lift-shadow 1s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-lift\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes lift-shadow{\n  0%,100%{ transform:translateY(0); box-shadow:none }\n  50%    { transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12) }\n}\n.anim-lift:hover .demo{ animation:lift-shadow 1s ease infinite }"
+  },
+  "scale": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-scale\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes scale-up{\n  0%,100%{ transform:scale(1) }\n  50%    { transform:scale(1.08) }\n}\n.anim-scale:hover .demo{ animation:scale-up .5s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-scale\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes scale-up{\n  0%,100%{ transform:scale(1) }\n  50%    { transform:scale(1.08) }\n}\n.anim-scale:hover .demo{ animation:scale-up .5s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-scale\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes scale-up{\n  0%,100%{ transform:scale(1) }\n  50%    { transform:scale(1.08) }\n}\n.anim-scale:hover .demo{ animation:scale-up .5s ease infinite }"
+  },
+  "border": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-border\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes border-glow{\n  0%,100%{ box-shadow:0 0 0 0 rgba(55,138,221,0) }\n  50%    { box-shadow:0 0 0 3px rgba(55,138,221,.35) }\n}\n.anim-border:hover .demo{ animation:border-glow 1.2s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-border\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes border-glow{\n  0%,100%{ box-shadow:0 0 0 0 rgba(55,138,221,0) }\n  50%    { box-shadow:0 0 0 3px rgba(55,138,221,.35) }\n}\n.anim-border:hover .demo{ animation:border-glow 1.2s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-border\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes border-glow{\n  0%,100%{ box-shadow:0 0 0 0 rgba(55,138,221,0) }\n  50%    { box-shadow:0 0 0 3px rgba(55,138,221,.35) }\n}\n.anim-border:hover .demo{ animation:border-glow 1.2s ease infinite }"
+  },
+  "float": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-float\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes float-y{\n  0%,100%{ transform:translateY(0) }\n  50%    { transform:translateY(-8px) }\n}\n.anim-float:hover .demo{ animation:float-y 1.4s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-float\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes float-y{\n  0%,100%{ transform:translateY(0) }\n  50%    { transform:translateY(-8px) }\n}\n.anim-float:hover .demo{ animation:float-y 1.4s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-float\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes float-y{\n  0%,100%{ transform:translateY(0) }\n  50%    { transform:translateY(-8px) }\n}\n.anim-float:hover .demo{ animation:float-y 1.4s ease infinite }"
+  },
+  "tilt": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-tilt\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes tilt{\n  0%,100%{ transform:rotate(0) }\n  25%    { transform:rotate(-3deg) }\n  75%    { transform:rotate(3deg) }\n}\n.anim-tilt:hover .demo{ animation:tilt .6s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-tilt\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes tilt{\n  0%,100%{ transform:rotate(0) }\n  25%    { transform:rotate(-3deg) }\n  75%    { transform:rotate(3deg) }\n}\n.anim-tilt:hover .demo{ animation:tilt .6s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-tilt\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes tilt{\n  0%,100%{ transform:rotate(0) }\n  25%    { transform:rotate(-3deg) }\n  75%    { transform:rotate(3deg) }\n}\n.anim-tilt:hover .demo{ animation:tilt .6s ease infinite }"
+  },
+  "pulse": {
+    "js": "<!-- HTML -->\n<div class=\"card anim-pulse\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes pulse-ring{\n  0%  { box-shadow:0 0 0 0 rgba(15,118,110,.4) }\n  100%{ box-shadow:0 0 0 12px rgba(15,118,110,0) }\n}\n.anim-pulse:hover .demo{ animation:pulse-ring 1s ease infinite }",
+    "react": "<!-- HTML -->\n<div class=\"card anim-pulse\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes pulse-ring{\n  0%  { box-shadow:0 0 0 0 rgba(15,118,110,.4) }\n  100%{ box-shadow:0 0 0 12px rgba(15,118,110,0) }\n}\n.anim-pulse:hover .demo{ animation:pulse-ring 1s ease infinite }",
+    "vue": "<!-- HTML -->\n<div class=\"card anim-pulse\">\n  <div class=\"demo\">\u2026</div>\n</div>\n\n/* CSS */\n@keyframes pulse-ring{\n  0%  { box-shadow:0 0 0 0 rgba(15,118,110,.4) }\n  100%{ box-shadow:0 0 0 12px rgba(15,118,110,0) }\n}\n.anim-pulse:hover .demo{ animation:pulse-ring 1s ease infinite }"
+  }
+};
+window.ANIM_LABELS = {"lift": "Lift on hover", "scale": "Scale up", "border": "Border glow", "float": "Floating bob", "tilt": "Tilt wobble", "pulse": "Pulse ring"};
 </script>
 </body>
 </html>
