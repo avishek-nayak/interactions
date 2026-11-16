@@ -1,6 +1,6 @@
 # Interactions
 
-A library of 87 web interactions you can try in the browser. Open `index.html` (or the GitHub Pages site) and press play on any cell.
+A library of 93 web interactions you can try in the browser. Open `index.html` (or the GitHub Pages site) and press play on any cell.
 
 ## Layout
 
@@ -17,7 +17,7 @@ css/style.css         layout, grid lines, controls, search
 fonts/Fragmentcore.otf
 js/core.js            registry + shared helpers (loop, canvas, pointer, springs, FLIP, icons)
 js/app.js             index, canvas, right panel, play/stop, search
-js/demos/*.js         the 87 interactions, one IX.add({...}) each
+js/demos/*.js         the 93 interactions, one IX.add({...}) each
 teardowns/            interaction breakdowns of real websites
 ```
 
