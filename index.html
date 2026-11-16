@@ -13,40 +13,39 @@
 <!-- Navigation -->
 <header class="nav">
   <a class="nav-title" href="./">Interactions</a>
-  <button class="nav-search" id="searchOpen" aria-label="Search interactions" aria-haspopup="dialog">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+  <div class="nav-search" id="navSearch">
+    <input id="searchInput" type="search" placeholder="Search interactions" autocomplete="off" spellcheck="false" aria-label="Search interactions" aria-controls="grid">
+    <button class="nav-clear" id="searchClear" aria-label="Close search">Esc</button>
+  </div>
+  <button class="nav-btn" id="searchOpen" aria-label="Search interactions" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
   </button>
 </header>
 
 <div class="app">
   <!-- Left panel: every interaction, no categories -->
   <nav class="left" aria-label="All interactions">
-    <div class="panel-head"><span>Index</span><span id="count"></span></div>
-    <ol class="list" id="list"></ol>
+    <button class="rail" data-collapse="left" aria-label="Show index"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6l6 6-6 6M5 6l6 6-6 6"/></svg><span>Index</span></button>
+    <div class="panel-body">
+      <div class="panel-head"><span>Index</span><span class="ph-r"><span id="count"></span><button class="collapse" data-collapse="left" aria-label="Hide index"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6l-6 6 6 6M19 6l-6 6 6 6"/></svg></button></span></div>
+      <ol class="list" id="list"></ol>
+    </div>
   </nav>
 
   <!-- Middle canvas: 3 or 4 columns, infinite rows -->
   <main class="canvas" id="canvas" aria-label="Interaction canvas">
     <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden></p>
   </main>
 
   <!-- Right panel: details + extra controls of the selected interaction -->
-  <aside class="right" id="right" aria-label="Interaction controls"></aside>
-</div>
-
-<!-- Search overlay -->
-<div class="sx" id="sx" hidden>
-  <div class="sx-back" data-close></div>
-  <div class="sx-panel" role="dialog" aria-modal="true" aria-label="Search interactions">
-    <div class="sx-bar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-      <input id="sxInput" type="text" placeholder="Search interactions" autocomplete="off" spellcheck="false" aria-controls="sxRes">
-      <button class="sx-esc" data-close aria-label="Close search">Esc</button>
+  <aside class="right" id="right" aria-label="Interaction controls">
+    <button class="rail" data-collapse="right" aria-label="Show controls"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6l-6 6 6 6M19 6l-6 6 6 6"/></svg><span>Controls</span></button>
+    <div class="panel-body">
+      <div class="panel-head"><span class="ph-l"><button class="collapse" data-collapse="right" aria-label="Hide controls"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6l6 6-6 6M5 6l6 6-6 6"/></svg></button>Selected</span><span id="rpCount"></span></div>
+      <div id="rpBody"></div>
     </div>
-    <div class="sx-meta" id="sxMeta"></div>
-    <ul class="sx-res" id="sxRes" role="listbox"></ul>
-    <div class="sx-foot">Arrow keys to move · Enter to open · Esc to close</div>
-  </div>
+  </aside>
 </div>
 
 <script src="js/core.js"></script>

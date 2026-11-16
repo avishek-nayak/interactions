@@ -14,7 +14,7 @@
   st.textContent = IX._css.join('\n');
   document.head.appendChild(st);
 
-  const grid = $('#grid'), listEl = $('#list'), right = $('#right'), canvasEl = $('#canvas');
+  const grid = $('#grid'), listEl = $('#list'), right = $('#right'), canvasEl = $('#canvas'), rpBody = $('#rpBody'), rpCount = $('#rpCount');
   $('#count').textContent = list.length;
 
   let selected = -1, playing = -1;
@@ -106,7 +106,10 @@
     build(it);
     it.cell.classList.add('is-sel');
     it.li.classList.add('sel');
-    it.li.scrollIntoView({ block: 'nearest' });
+    // scroll only the index list (scrollIntoView would also shift the clipped panel)
+    const pb = listEl.closest('.panel-body'), li = it.li.parentElement, head = 40;
+    if (li.offsetTop - head < pb.scrollTop) pb.scrollTop = li.offsetTop - head;
+    else if (li.offsetTop + li.offsetHeight > pb.scrollTop + pb.clientHeight) pb.scrollTop = li.offsetTop + li.offsetHeight - pb.clientHeight;
     if (scroll) it.cell.scrollIntoView({ block: 'center', behavior: 'smooth' });
     renderPanel(it);
     right.classList.add('show');
@@ -114,8 +117,8 @@
 
   function renderPanel(it) {
     const d = it.def, cs = d.controls || [];
-    right.innerHTML = `
-      <div class="panel-head"><span>Selected</span><span>${pad(it.i)} / ${pad(items.length - 1)}</span></div>
+    rpCount.textContent = `${pad(it.i)} / ${pad(items.length - 1)}`;
+    rpBody.innerHTML = `
       <div class="rp-head">
         <div class="n">${pad(it.i)}</div>
         <h2>${esc(d.name)}</h2>
@@ -194,11 +197,12 @@
   // small screens: the right panel is a bottom drawer; tap its header to tuck it away
   right.addEventListener('click', (e) => { if (e.target.closest('.panel-head') && window.innerWidth <= 860) right.classList.remove('show'); });
 
-  right.innerHTML = `<div class="panel-head"><span>Selected</span><span></span></div><p class="rp-empty">Select an interaction from the index or the canvas. Its details and any extra controls show up here.</p>`;
+  rpBody.innerHTML = `<p class="rp-empty">Select an interaction from the index or the canvas. Its details and any extra controls show up here.</p>`;
 
-  /* ── search: elastic open, fuzzy ranking ── */
-  const sx = $('#sx'), panel = $('.sx-panel', sx), input = $('#sxInput'), res = $('#sxRes'), meta = $('#sxMeta'), openBtn = $('#searchOpen');
-  let results = [], active = 0, isOpen = false;
+  /* ── search: opens inside the nav bar and filters the cards ── */
+  const navSearch = $('#navSearch'), input = $('#searchInput'), openBtn = $('#searchOpen'), clearBtn = $('#searchClear');
+  const countEl = $('#count'), emptyEl = $('#empty');
+  let isOpen = false;
 
   const lev = (a, b) => {
     if (Math.abs(a.length - b.length) > 2) return 9;
@@ -210,96 +214,83 @@
   const words = (s) => s.toLowerCase().match(/[a-z0-9]+/g) || [];
   const index = items.map((it) => ({ it, nw: words(it.def.name), dw: words(it.def.desc), num: pad(it.i) }));
 
-  // score one token against a word list; returns [score, matchedWord]
-  const tokScore = (t, ws) => {
-    let best = [0, null];
-    for (const w of ws) {
-      let sc = 0;
-      if (w === t) sc = 10;
-      else if (w.startsWith(t)) sc = 8;
-      else if (t.length >= 3 && w.includes(t)) sc = 5;
-      else if (t.length >= 3) { const lim = t.length >= 6 ? 2 : 1, d = lev(t, w.slice(0, t.length + 1)) ; if (d <= lim || lev(t, w) <= lim) sc = 3 - (d > 1 ? 1 : 0); }
-      if (sc > best[0]) best = [sc, w];
-    }
-    return best;
-  };
+  // typo-tolerant match of one token against a word list
+  const tokMatch = (t, ws) => ws.some((w) => {
+    if (w.startsWith(t)) return true;
+    if (t.length >= 3 && w.includes(t)) return true;
+    if (t.length >= 3) { const lim = t.length >= 6 ? 2 : 1; return lev(t, w) <= lim || lev(t, w.slice(0, t.length)) <= lim; }
+    return false;
+  });
 
-  function runSearch(q) {
+  function filter(q) {
     const toks = words(q);
-    if (!toks.length) { results = index.map((e) => ({ e, score: 0, hits: [] })); }
-    else {
-      results = [];
-      for (const e of index) {
-        let total = 0, hits = [], ok = true;
-        for (const t of toks) {
-          if (/^\d+$/.test(t) && e.num.endsWith(t.padStart(3, '0'))) { total += 12; continue; }
-          const [ns, nw] = tokScore(t, e.nw), [ds, dw] = tokScore(t, e.dw);
-          const sc = Math.max(ns * 3, ds);
-          if (!sc) { ok = false; break; }
-          total += sc; hits.push(ns * 3 >= ds ? nw : dw, t);
-        }
-        if (ok) results.push({ e, score: total, hits });
-      }
-      results.sort((a, b) => b.score - a.score || a.e.it.i - b.e.it.i);
-    }
-    active = 0;
-    paintResults(toks);
+    let shown = 0;
+    index.forEach((e) => {
+      const ok = !toks.length || toks.every((t) => (/^\d+$/.test(t) && e.num.endsWith(t.padStart(3, '0'))) || tokMatch(t, e.nw) || tokMatch(t, e.dw));
+      e.it.cell.hidden = !ok;
+      e.it.li.parentElement.hidden = !ok;
+      if (ok) shown++;
+      else if (playing === e.it.i) stop(e.it.i);
+    });
+    countEl.textContent = toks.length ? `${shown} / ${items.length}` : items.length;
+    emptyEl.hidden = shown > 0;
+    emptyEl.textContent = shown ? '' : `No interactions match “${q.trim()}”.`;
+    canvasEl.scrollTop = 0;
   }
-
-  const hl = (text, marks) => {
-    if (!marks.length) return esc(text);
-    const re = new RegExp('(' + marks.filter(Boolean).map((m) => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).sort((a, b) => b.length - a.length).join('|') + ')', 'gi');
-    return esc(text).replace(re, '<mark>$1</mark>');
-  };
-
-  function paintResults(toks) {
-    meta.textContent = toks.length ? `${results.length} result${results.length === 1 ? '' : 's'}` : `All ${results.length} interactions`;
-    if (!results.length) { res.innerHTML = `<li class="empty">Nothing matches “${esc(input.value)}”. Try another word.</li>`; return; }
-    res.innerHTML = results.map((r, k) => `<li role="option" data-i="${r.e.it.i}" class="${k === active ? 'act' : ''}"><span class="n">${r.e.num}</span><b>${hl(r.e.it.def.name, r.hits)}</b><small>${hl(r.e.it.def.desc, r.hits)}</small></li>`).join('');
-  }
-  const moveActive = (d) => {
-    if (!results.length) return;
-    active = (active + d + results.length) % results.length;
-    [...res.children].forEach((li, k) => li.classList.toggle('act', k === active));
-    res.children[active].scrollIntoView({ block: 'nearest' });
-  };
 
   function openSearch() {
-    if (isOpen) return;
+    if (isOpen) { input.focus(); return; }
     isOpen = true;
-    sx.hidden = false;
-    input.value = '';
-    runSearch('');
-    // elastic: the panel springs out of the search icon
-    const b = openBtn.getBoundingClientRect(), p = panel.getBoundingClientRect();
-    const dx = b.left + b.width / 2 - (p.left + p.width / 2), dy = b.top + b.height / 2 - p.top;
-    const sxk = IX.springKeys(0, 1, { k: 210, c: 15, frames: 54 });
-    panel.animate(sxk.map((q) => ({ transform: `translate(${dx * (1 - q)}px,${dy * (1 - q)}px) scale(${0.08 + 0.92 * q},${0.1 + 0.9 * Math.min(1.08, q)})`, opacity: Math.min(1, q * 3) })), { duration: 900, easing: 'linear' });
-    $('.sx-back', sx).animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
-    setTimeout(() => input.focus(), 30);
+    navSearch.classList.add('open');
+    openBtn.setAttribute('aria-expanded', 'true');
+    // elastic: the field wipes open from the icon and the text springs into place
+    const keys = IX.springKeys(0, 1, { k: 240, c: 16, frames: 48 });
+    navSearch.animate(keys.map((q) => ({ clipPath: `inset(0 0 0 ${Math.max(0, (1 - q) * 100)}%)` })), { duration: 800, easing: 'linear' });
+    input.animate(keys.map((q) => ({ transform: `translateX(${(1 - q) * 60}px)` })), { duration: 800, easing: 'linear' });
+    setTimeout(() => input.focus(), 20);
   }
   function closeSearch() {
     if (!isOpen) return;
     isOpen = false;
-    const b = openBtn.getBoundingClientRect(), p = panel.getBoundingClientRect();
-    const dx = b.left + b.width / 2 - (p.left + p.width / 2), dy = b.top + b.height / 2 - p.top;
-    const a = panel.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(.08,.1)`, opacity: 0 }], { duration: 260, easing: 'cubic-bezier(.6,0,.8,.4)' });
-    $('.sx-back', sx).animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260 });
-    a.onfinish = () => { sx.hidden = true; openBtn.focus(); };
+    openBtn.setAttribute('aria-expanded', 'false');
+    const a = navSearch.animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 0 100%)' }], { duration: 260, easing: 'cubic-bezier(.6,0,.8,.4)' });
+    a.onfinish = () => navSearch.classList.remove('open');
+    input.value = '';
+    filter('');
+    openBtn.focus();
   }
-  const choose = (i) => { closeSearch(); select(i, true); };
 
-  openBtn.onclick = openSearch;
-  sx.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) closeSearch(); const li = e.target.closest('li[data-i]'); if (li) choose(+li.dataset.i); });
-  input.addEventListener('input', () => runSearch(input.value));
+  openBtn.onclick = () => (isOpen ? closeSearch() : openSearch());
+  clearBtn.onclick = closeSearch;
+  input.addEventListener('input', () => filter(input.value));
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
-    else if (e.key === 'Enter' && results[active]) choose(results[active].e.it.i);
+    if (e.key === 'Escape') closeSearch();
+    if (e.key === 'Enter') { const first = items.find((it) => !it.cell.hidden); if (first) select(first.i, true); }
   });
   document.addEventListener('keydown', (e) => {
     const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
-    if (e.key === 'Escape' && isOpen) closeSearch();
-    else if (!isOpen && !typing && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) { e.preventDefault(); openSearch(); }
+    if (!typing && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) { e.preventDefault(); openSearch(); }
   });
+
+  /* ── collapsible side panels ── */
+  const app = $('.app');
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  ['left', 'right'].forEach((side) => {
+    const cls = side + '-closed';
+    if (store.get('ix-' + cls) === '1') app.classList.add(cls);
+    document.querySelectorAll(`[data-collapse="${side}"]`).forEach((b) => (b.onclick = (e) => {
+      e.stopPropagation();
+      const closed = app.classList.toggle(cls);
+      store.set('ix-' + cls, closed ? '1' : '0');
+      syncCollapse();
+    }));
+  });
+  function syncCollapse() {
+    ['left', 'right'].forEach((side) => {
+      const closed = app.classList.contains(side + '-closed');
+      document.body.classList.toggle(side + '-closed', closed);
+      document.querySelectorAll(`[data-collapse="${side}"]`).forEach((b) => b.setAttribute('aria-expanded', String(!closed)));
+    });
+  }
+  syncCollapse();
 })();
