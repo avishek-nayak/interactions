@@ -73,12 +73,14 @@ body.left-closed .nav-title { width: auto; }
 .app {
   position: fixed; inset: var(--nav-h) 0 0 0;
   display: grid; grid-template-columns: var(--left-w) minmax(0, 1fr) var(--right-w);
+  grid-template-rows: minmax(0, 1fr);
   transition: grid-template-columns .45s var(--ease);
 }
 .app.left-closed { grid-template-columns: var(--rail) minmax(0, 1fr) var(--right-w); }
 .app.right-closed { grid-template-columns: var(--left-w) minmax(0, 1fr) var(--rail); }
 .app.left-closed.right-closed { grid-template-columns: var(--rail) minmax(0, 1fr) var(--rail); }
-.left, .right { position: relative; overflow: clip; min-width: 0; }
+.left, .right { position: relative; overflow: clip; min-width: 0; min-height: 0; }
+.canvas { min-height: 0; }
 .panel-body, .canvas { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 .panel-body { min-width: 220px; transition: opacity .25s; }
 .left { border-right: 1px solid var(--line); }
