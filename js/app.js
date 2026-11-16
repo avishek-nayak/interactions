@@ -35,7 +35,7 @@
   grid.innerHTML = items.map((it) => `
     <article class="cell" id="ix-${pad(it.i)}" data-i="${it.i}">
       <header class="cell-h"><span class="n">${pad(it.i)}</span><h3>${esc(it.def.name)}</h3></header>
-      <div class="sw"><div class="stage" inert></div><div class="cover" aria-hidden="true"><span>${icon('play', 14)}Play</span></div></div>
+      <div class="sw"><div class="stage" inert></div><div class="cover" aria-hidden="true"></div></div>
       <footer class="cell-f"><p>${esc(it.def.desc)}</p><button class="play" aria-label="Play ${esc(it.def.name)}">${icon('play', 16)}</button></footer>
     </article>`).join('');
   items.forEach((it) => { it.cell = grid.children[it.i]; it.stage = $('.stage', it.cell); });
@@ -43,7 +43,7 @@
   grid.addEventListener('click', (e) => {
     const cell = e.target.closest('.cell'); if (!cell) return;
     const i = +cell.dataset.i;
-    if (e.target.closest('.play') || e.target.closest('.cover')) { toggle(i); return; }
+    if (e.target.closest('.play')) { toggle(i); return; }
     if (i !== selected) select(i, false);
   });
 

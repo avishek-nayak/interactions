@@ -113,17 +113,8 @@ ol, ul { list-style: none; }
 .stage > .ix-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* nothing moves until play */
 .cell:not(.is-playing) .stage *, .cell:not(.is-playing) .stage *::before, .cell:not(.is-playing) .stage *::after { animation-play-state: paused !important; }
-.cover {
-  position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; cursor: pointer;
-  background: rgba(243, 242, 238, 0); transition: background .25s;
-}
-.cover span {
-  display: flex; align-items: center; gap: 8px; padding: 8px 16px 8px 12px; font-size: 14px;
-  background: var(--ink); color: var(--paper); border-radius: 20px;
-  opacity: 0; transform: translateY(6px) scale(.96); transition: opacity .2s, transform .3s var(--ease);
-}
-.cover:hover { background: rgba(243, 242, 238, .35); }
-.cover:hover span { opacity: 1; transform: none; }
+/* invisible layer over an idle stage: clicking it selects the cell (play only via the play button) */
+.cover { position: absolute; inset: 0; z-index: 4; cursor: pointer; }
 .cell.is-playing .cover { display: none; }
 .cell-f { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; border-top: 1px solid var(--line); margin-top: auto; }
 .cell-f p { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.7em; }
