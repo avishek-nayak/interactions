@@ -70,7 +70,7 @@ The page should read like a technical drawing.
 - **All borders are 1px and grey** (`--line`). No 2px borders, no coloured borders.
 - **Exception — selection:** the selected item gets a 1px **black** outline (use `box-shadow: inset 0 0 0 1px var(--ink)` so layout does not shift), and its inner dividers and primary button turn black too.
 - **Grid-intersection marks:** a small 9×9px "+" in `--mark` sits at each corner where cells meet, like registration marks on a drawing.
-- **Graph-paper surfaces:** content stages carry a faint 24px grid at 4.5% ink.
+- **Graph-paper surfaces:** content stages carry a faint 24px grid at 4.5% ink. The **selected** item drops the grid and turns its stage plain white (`#FFFFFF`).
 - **Panels are divided by lines, not by fills or shadows.** Adjacent regions share one 1px line (no doubled borders).
 - **Corners are square.** Allowed exceptions only:
   - circular icon buttons (e.g. 36px play button)

@@ -162,6 +162,8 @@ body.left-closed .nav-title { width: auto; }
 .cell.is-sel { box-shadow: inset 0 0 0 1px var(--ink); z-index: 1; }
 .cell.is-sel .cell-h { border-bottom-color: var(--ink); }
 .cell.is-sel .cell-f { border-top-color: var(--ink); }
+/* selected card: plain white demo area, no graph-paper squares */
+.cell.is-sel .stage { background: #fff; box-shadow: inset 1px 0 0 var(--ink), inset -1px 0 0 var(--ink); }
 
 /* ── Right panel ── */
 .rp-empty { padding: 20px; color: var(--muted); font-size: 14px; }
